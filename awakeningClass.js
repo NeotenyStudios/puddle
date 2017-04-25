@@ -6,12 +6,14 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:09:03 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/20 14:36:38 by mgras            ###   ########.fr       */
+/*   Updated: 2017/04/25 18:42:41 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 let Awakening = function(config) {
 	console.log(config);
+	this.height				= config.height;
+	this.width				= config.width;
 	this.canvasDOM			= initCanvas(config.width, config.height);
 	this.canvas				= this.canvasDOM.getContext('2d');
 	this.lastRender			= 0;
@@ -25,13 +27,14 @@ let Awakening = function(config) {
 }
 
 Awakening.prototype.calculateLogic = function(progress) {
+	for (let object in this.objects)
+		this.objects[object].updateRigidBody();
 	for (let object in this.objects) {
 		const stamp = object;
 
-		this.objects[object].updateRigidBody();
 		for (let rB in this.objects)
 		{
-			if (rB != stamp)
+			if (rB !== stamp)
 				this.objects[object].resolveRigidBody(this.objects[rB].rigidBody);
 		}
 	}
@@ -39,6 +42,7 @@ Awakening.prototype.calculateLogic = function(progress) {
 
 Awakening.prototype.draw = function(progress) {
 	this.forwardAnimationStates(progress);
+	this.clearCanvas();
 	for (let object in this.objects) {
 		this.objects[object].draw(this, progress);
 	}

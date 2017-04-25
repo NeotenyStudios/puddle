@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/03 15:30:32 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/20 15:18:00 by mgras            ###   ########.fr       */
+/*   Updated: 2017/04/25 18:55:22 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,54 +37,31 @@ $(document).ready(() => {
 	awakening.buildObject('rightBlock', {'engine' : this});
 
 	setInterval(() => {
-		if (awakening.objNb < 250)
+		if (awakening.objNb < 50)
 		{
 			awakening.buildObject('blockL' + blockL, {'engine' : this});
 			rest = awakening.objects['blockL' + blockL];
 			blockL++;
 			rest.move(40, 455);
-			rest.setSize(gMM(20, 25), gMM(20, 25));
+			rest.setSize(100, 100);
 			rest.addRigidBody();
-			rest.setSpeed(gMM(10, 5), 2);
+			rest.setSpeed(gMM(10, 5), 5);
 		}
-	}, 250);
+	}, 500);
 
 	setInterval(() => {
-		if (awakening.objNb < 250)
+		if (awakening.objNb < 50)
 		{
 			awakening.buildObject('blockX' + blockX, {'engine' : this});
 			rest = awakening.objects['blockX' + blockX];
 			blockX++;
 			rest.move(1500, 450);
-			rest.setSize(gMM(20, 25), gMM(20, 25));
+			rest.setSize(75, 75);
 			rest.addRigidBody();
-			rest.setSpeed(gMM(-10, 5), 2);
+			rest.rigidBody.setMass(100);
+			rest.setSpeed(gMM(-10, 5), 5);
 		}
 	}, 250);
-
-	let bottomBlock = awakening.objects.bottomBlock;
-	bottomBlock.move(0, 1000);
-	bottomBlock.setSize(1920, 50);
-	bottomBlock.addRigidBody();
-	bottomBlock.rigidBody.setMass(0);
-
-	let topBlock = awakening.objects.topBlock;
-	topBlock.move(0, 50);
-	topBlock.setSize(1920, 50);
-	topBlock.addRigidBody();
-	topBlock.rigidBody.setMass(0);
-
-	let leftBlock = awakening.objects.leftBlock;
-	leftBlock.move(0, 101);
-	leftBlock.setSize(50, 890);
-	leftBlock.addRigidBody();
-	leftBlock.rigidBody.setMass(0);
-
-	let rightBlock = awakening.objects.rightBlock;
-	rightBlock.move(1800, 101);
-	rightBlock.setSize(50, 890);
-	rightBlock.addRigidBody();
-	rightBlock.rigidBody.setMass(0);
 
 	window.requestAnimationFrame((timestamp) => {awakening.loop(timestamp)});
 });

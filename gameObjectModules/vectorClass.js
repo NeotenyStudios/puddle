@@ -6,15 +6,19 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:18:39 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/20 12:31:51 by mgras            ###   ########.fr       */
+/*   Updated: 2017/04/25 16:16:35 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 let Vector = function(config) {
-	if (!config)
+	if (config === undefined)
 		config = {};
-	this.x = config.x || 0;
-	this.y = config.y || 0;
+	this.x = config.x;
+	this.y = config.y;
+	if (this.x === undefined)
+		this.x = 0;
+	if (this.y === undefined)
+		this.y = 0;
 }
 
 Vector.prototype.dotProduct = function(v) {
