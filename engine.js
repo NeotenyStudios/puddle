@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/03 15:30:32 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/26 16:10:04 by mgras            ###   ########.fr       */
+/*   Updated: 2017/04/26 16:20:23 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ $(document).ready(() => {
 	let blockX = 0;
 	let blockR = 0;
 
-	// awakening.buildObject('bottomBlock', {'engine' : this});
-	// awakening.buildObject('topBlock', {'engine' : this});
-	// awakening.buildObject('leftBlock', {'engine' : this});
-	// awakening.buildObject('rightBlock', {'engine' : this});
+	// awakening.buildObject('bottomBlock');
+	// awakening.buildObject('topBlock');
+	// awakening.buildObject('leftBlock');
+	// awakening.buildObject('rightBlock');
 
-	setInterval(() => {
+	// setInterval(() => {
 		if (awakening.objNb < 150 && start === true)
 		{
-			awakening.buildObject('blockL' + blockL, {'engine' : this});
+			awakening.buildObject('blockL' + blockL);
 			rest = awakening.objects['blockL' + blockL];
 			blockL++;
 			rest.move(40, 455);
@@ -49,12 +49,12 @@ $(document).ready(() => {
 			rest.addRigidBody();
 			rest.setSpeed(gMM(10, 5), 5);
 		}
-	}, 250);
+	// }, 250);
 
-	setInterval(() => {
+	// setInterval(() => {
 		if (awakening.objNb < 150 && start === true)
 		{
-			awakening.buildObject('blockR' + blockR, {'engine' : this});
+			awakening.buildObject('blockR' + blockR);
 			rest = awakening.objects['blockR' + blockR];
 			blockR++;
 			rest.move(1500, 450);
@@ -64,14 +64,16 @@ $(document).ready(() => {
 			rest.rigidBody.setMass(100);
 			rest.setSpeed(gMM(-10, 5), 5);
 		}
-	}, 250);
+	// }, 250);
 
-	awakening.buildObject('blockX' + blockX, {'engine' : this});
+	awakening.buildObject('blockX' + blockX);
 	hb = awakening.objects['blockX' + blockX];
 	blockX++;
 	hb.move(0, 100);
 	hb.setSize(1920, 100);
-	hb.addHitBox({});
+	hb.addRigidBody()
+	hb.setMass(0);
+	hb.addHitBox();
 
 	window.requestAnimationFrame((timestamp) => {awakening.loop(timestamp)});
 });
