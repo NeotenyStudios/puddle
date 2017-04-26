@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:23:30 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/25 19:07:10 by mgras            ###   ########.fr       */
+/*   Updated: 2017/04/26 14:15:51 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,7 @@ let RigidBody = function(parentGameObject, config) {
 	this.invmass = 1/100;
 	this.restitution = 1;
 	this.velocity = new Vector();
-	this.maxSpeed = {
-		x : 5,
-		y : 5
-	}
+	this.debugColor = '#000';
 }
 
 RigidBody.prototype.update = function() {
@@ -85,25 +82,43 @@ RigidBody.prototype.drawDebug = function(permission, canvas) {
 	}
 }
 
+RigidBody.prototype.getOverlap = function(b) {
+	let overlap = {};
+
+	if (this.min.x > b.min.x && this.max.x > b.max.x) //this is overlapping from the right
+		overlap.x = b.max.x - this.min.x;
+	else if (this.max.x < b.max.x && this.min.x < b.min.x) //this is overlapping from the left
+		overlap.x = this.max.x - b.min.x
+	else if (this.max.x >= b.max.x && this.min.x <= b.min.x) //this is containing b
+		overlap.x = b.width;
+	else if (this.max.x <= b.max.x && this.min.x >= b.min.x) //this is contained by b
+		overlap.x = this.width;
+
+	if (this.min.y > b.min.y && this.max.y > b.max.y) //this is overlapping from the bottom
+		overlap.y = b.max.y - this.min.y;
+	else if (this.max.y < b.max.y && this.min.y < b.min.y) //this is overlapping from the top
+		overlap.y = this.max.y - b.min.y
+	else if (this.max.y >= b.max.y && this.min.y <= b.min.y) //this is containing b
+		overlap.y = b.height;
+	else if (this.max.y <= b.max.y && this.min.y >= b.min.y) //this is contained by b
+		overlap.y = this.height;
+	return (overlap);
+}
+
 RigidBody.prototype.overlapAABB = function(b) {
 	let manifold = {};
-	let yOverlap;
 	let a = this;
 	let normal = new Vector({x : b.x - a.x, y : b.y - a.y});
-	let aExtent = (a.max.x - a.min.x) / 2;
-	let bExtent = (b.max.x - b.min.x) / 2;
-	let xOverlap = aExtent + bExtent - Math.abs(normal.x);
+	let overlap = this.getOverlap(b);
 
-	aExtent = (a.max.y - a.min.y) / 2;
-	bExtent = (b.max.y - b.min.y) / 2;
-	yOverlap = aExtent + bExtent - Math.abs(normal.y);
-	if (xOverlap < yOverlap)
+
+	if (overlap.x < overlap.y)
 	{
 		if (normal.x < 0)
 			manifold.normal = new Vector({x : -1, y : 0});
 		else
 			manifold.normal = new Vector({x : 1, y : 0});
-		manifold.penetration = Math.abs(xOverlap);
+		manifold.penetration = Math.abs(overlap.x);
 	}
 	else
 	{
@@ -111,7 +126,7 @@ RigidBody.prototype.overlapAABB = function(b) {
 			manifold.normal = new Vector({x : 0, y : -1});
 		else
 			manifold.normal = new Vector({x : 0, y : 1});
-		manifold.penetration = Math.abs(yOverlap);
+		manifold.penetration = Math.abs(overlap.y);
 	}
 	return (manifold);
 }
@@ -139,11 +154,6 @@ RigidBody.prototype.isColliding = function(b) {
 RigidBody.prototype.setVelocity = function(x, y) {
 	this.velocity.x = x;
 	this.velocity.y = y;
-}
-
-RigidBody.prototype.applyGravity = function() {
-	if (this.velocity.y < this.maxSpeed.y)
-	this.velocity.y += this.mass / 1000;
 }
 
 RigidBody.prototype.resolveCollision = function(b, manifold) {

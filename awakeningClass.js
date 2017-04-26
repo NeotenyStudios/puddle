@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:09:03 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/25 18:42:41 by mgras            ###   ########.fr       */
+/*   Updated: 2017/04/26 16:07:45 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,26 @@ let Awakening = function(config) {
 	this.displayFrameRate	= true;
 	this.displayObjCount	= true;
 	this.objNb				= 0;
+	this.hits				= 0;
 }
 
 Awakening.prototype.calculateLogic = function(progress) {
 	for (let object in this.objects)
+	{
 		this.objects[object].updateRigidBody();
+		this.objects[object].updateHitBoxes();
+	}
 	for (let object in this.objects) {
-		const stamp = object;
+		let stamp = object;
 
-		for (let rB in this.objects)
+		for (let b in this.objects)
 		{
-			if (rB !== stamp)
-				this.objects[object].resolveRigidBody(this.objects[rB].rigidBody);
+			if (b !== stamp)
+			{
+				this.objects[object].resolveRigidBody(this.objects[b].rigidBody);
+				for (let hB in this.objects[b].hitBoxes)
+					this.objects[object].resolveHitBoxes(this.objects[b].hitBoxes[hB]);
+			}
 		}
 	}
 };
@@ -54,6 +62,8 @@ Awakening.prototype.draw = function(progress) {
 		this.canvas.font = '20px Arial';
 		this.canvas.fillText(this.objNb.toString(), 75 , 25);
 	}
+	this.canvas.font = '20px Arial';
+	this.canvas.fillText(this.hits.toString(), 150 , 25);
 };
 
 Awakening.prototype.loop = function(timestamp) {
