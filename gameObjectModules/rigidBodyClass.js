@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:23:30 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/26 14:15:51 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/01 18:48:35 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,18 @@ let RigidBody = function(parentGameObject, config) {
 	this.height = parentGameObject.size.y;
 	this.min = new Vector();
 	this.max = new Vector();
-	this.mass = 100;
-	this.invmass = 1/100;
-	this.restitution = 1;
+	this.mass = 50;
+	this.invmass = 1 / this.mass;
+	this.restitution = 0.1;
 	this.velocity = new Vector();
 	this.debugColor = '#000';
+	this.gravity = false;
+	this.collide = {
+		right	: false,
+		left	: false,
+		top		: false,
+		bot		: false
+	};
 }
 
 RigidBody.prototype.update = function() {
@@ -41,22 +48,22 @@ RigidBody.prototype.update = function() {
 	if (this.x < 0)
 	{
 		this.x = 1;
-		this.velocity.x *= this.velocity.x < 0 ? -1 : 1;
+		this.velocity.x *= this.velocity.x < 0 ? -this.restitution : this.restitution;
 	}
 	if (this.x + this.width > this.parentGameObject.engine.width)
 	{
 		this.x = this.parentGameObject.engine.width - this.width - 1;
-		this.velocity.x *= this.velocity.x > 0 ? -1 : 1;
+		this.velocity.x *= this.velocity.x > 0 ? -this.restitution : this.restitution;
 	}
 	if (this.y < 0)
 	{
 		this.y = 0 + 1
-		this.velocity.y *= this.velocity.y < 0 ? -1 : 1;
+		this.velocity.y *= this.velocity.y < 0 ? -this.restitution : this.restitution;
 	}
 	if (this.y + this.height > this.parentGameObject.engine.height)
 	{
 		this.y = this.parentGameObject.engine.height - this.height - 1
-		this.velocity.y *= this.velocity.y > 0 ? -1 : 1;
+		this.velocity.y *= this.velocity.y > 0 ? -this.restitution : this.restitution;
 	}
 }
 
@@ -80,6 +87,10 @@ RigidBody.prototype.drawDebug = function(permission, canvas) {
 		canvas.rect(this.x, this.y, this.width, this.height);
 		canvas.stroke();
 	}
+}
+
+RigidBody.prototype.applyGravity = function() {
+	this.velocity.y += this.mass / 1000;
 }
 
 RigidBody.prototype.getOverlap = function(b) {
@@ -115,20 +126,41 @@ RigidBody.prototype.overlapAABB = function(b) {
 	if (overlap.x < overlap.y)
 	{
 		if (normal.x < 0)
+		{
+			this.collide.left = true;
+			b.collide.right = true;
 			manifold.normal = new Vector({x : -1, y : 0});
+		}
 		else
+		{
+			this.collide.right = true;
+			b.collide.left = true;
 			manifold.normal = new Vector({x : 1, y : 0});
+		}
 		manifold.penetration = Math.abs(overlap.x);
 	}
 	else
 	{
 		if (normal.y < 0)
+		{
+			this.collide.top = true;
+			b.collide.bot = true;
 			manifold.normal = new Vector({x : 0, y : -1});
+		}
 		else
+		{
+			this.collide.bot = true;
+			b.collide.top = true;
 			manifold.normal = new Vector({x : 0, y : 1});
+		}
 		manifold.penetration = Math.abs(overlap.y);
 	}
 	return (manifold);
+}
+
+RigidBody.prototype.addSpeed = function(x, y) {
+	this.velocity.x += x;
+	this.velocity.y += y;
 }
 
 RigidBody.prototype.move = function(x, y) {
@@ -165,8 +197,8 @@ RigidBody.prototype.resolveCollision = function(b, manifold) {
 	let cX;
 	let cY;
 	let impulse;
-	let percent = 0.2;
-	let slope = 0.05;
+	let percent = 0.8;
+	let slope = 0.1;
 
 	if (velAlongNormal > 0)
 		return (null);
@@ -190,9 +222,21 @@ RigidBody.prototype.resolveCollision = function(b, manifold) {
 	}
 }
 
+RigidBody.prototype.resetCollide = function() {
+	this.collide = {
+		right	: false,
+		left	: false,
+		top		: false,
+		bot		: false
+	};
+}
+
 RigidBody.prototype.checkCollision = function(b) {
 	let manifold;
 
+	this.resetCollide();
+	if (this.gravity === true)
+		this.applyGravity();
 	if (this.isColliding(b))
 	{
 		manifold = this.overlapAABB(b);

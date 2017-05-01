@@ -6,16 +6,13 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:09:03 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/26 16:18:22 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/01 18:56:00 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 let Awakening = function(config) {
-	console.log(config);
 	this.height				= config.height;
 	this.width				= config.width;
-	this.canvasDOM			= initCanvas(config.width, config.height);
-	this.canvas				= this.canvasDOM.getContext('2d');
 	this.lastRender			= 0;
 	this.objects			= {};
 	this.renderedFrames		= 0;
@@ -23,8 +20,15 @@ let Awakening = function(config) {
 	this.elapsedTime		= 0;
 	this.displayFrameRate	= true;
 	this.displayObjCount	= true;
+	this.displayHitCount	= true;
 	this.objNb				= 0;
 	this.hits				= 0;
+	this.layers				= {
+		'default' : new Canvas('default', {width : config.width, height : config.height}),
+		'debug' : new Canvas('debug', {width : config.width, height : config.height})
+	};
+	this.playerNb = 1;
+	this.controlers = [new Gamepad(0, this)];
 }
 
 Awakening.prototype.calculateLogic = function(progress) {
@@ -54,16 +58,21 @@ Awakening.prototype.draw = function(progress) {
 	for (let object in this.objects) {
 		this.objects[object].draw(this, progress);
 	}
-	if (this.displayFrameRate == true) {
-		this.canvas.font = '20px Arial';
-		this.canvas.fillText(this.lastRenderedFrames, 25 , 25);
+	if (this.displayFrameRate === true) {
+		this.layers.debug.ctx.font = '20px Arial';
+		this.layers.debug.ctx.fillText(this.lastRenderedFrames, 25 , 25);
 	}
-	if (this.displayObjCount == true) {
-		this.canvas.font = '20px Arial';
-		this.canvas.fillText(this.objNb.toString(), 75 , 25);
+	if (this.displayObjCount === true) {
+		this.layers.debug.ctx.font = '20px Arial';
+		this.layers.debug.ctx.fillText(this.objNb.toString(), 75 , 25);
 	}
-	this.canvas.font = '20px Arial';
-	this.canvas.fillText(this.hits.toString(), 150 , 25);
+	if (this.displayObjCount === true) {
+		this.layers.debug.ctx.font = '20px Arial';
+		this.layers.debug.ctx.fillText(this.hits.toString(), 150 , 25);
+	}
+	this.layers.debug.ctx.font = '20px Arial';
+	this.layers.debug.ctx.fillText(Math.round(score).toString() + ' + ' + Math.abs(878 - this.objects['blockL0'].position.y) / 100, 50 , 150);
+	this.layers.debug.ctx.fillText(Math.round(hScore).toString(), 50 , 250);
 };
 
 Awakening.prototype.loop = function(timestamp) {
@@ -71,6 +80,8 @@ Awakening.prototype.loop = function(timestamp) {
 
 	this.elapsedTime += progress;
 	this.clearCanvas();
+	for (let controler in this.controlers)
+		this.controlers[controler].update();
 	this.calculateLogic(progress);
 	this.draw(progress);
 	this.lastRender = timestamp;
@@ -79,7 +90,9 @@ Awakening.prototype.loop = function(timestamp) {
 };
 
 Awakening.prototype.clearCanvas = function() {
-	this.canvas.clearRect(0, 0, this.canvasDOM.width, this.canvasDOM.height);
+	for (layer in this.layers) {
+		this.layers[layer].ctx.clearRect(0, 0, this.layers[layer].DOM.width, this.layers[layer].DOM.height);
+	}
 }
 
 Awakening.prototype.buildObject = function(name){

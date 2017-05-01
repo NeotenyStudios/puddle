@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:45:46 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/26 16:04:31 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/01 16:28:09 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ let gameObject = function (config) {
 	this.layer			= 0;
 	this.name			= config.name;
 	this.debug			= {
-		'collisionBox' : false,
+		'hitBox' : false,
 		'rigidBody' : true,
 	}
 	this.engine			= config.engine || null;
@@ -44,9 +44,18 @@ gameObject.prototype.setSize = function(width, height) {
 	}
 }
 
+gameObject.prototype.toggleGravity = function() {
+	if (this.rigidBody)
+		this.rigidBody.gravity = this.rigidBody.gravity ? false : true;
+}
+
 gameObject.prototype.setSpeed = function(x, y) {
 	if (this.rigidBody)
 		this.rigidBody.setVelocity(x, y);
+}
+
+gameObject.prototype.addSpeed = function(x, y) {
+	this.rigidBody.addSpeed(x, y);
 }
 
 gameObject.prototype.resolveRigidBody = function(rB) {
@@ -96,11 +105,11 @@ gameObject.prototype.draw = function(awakening, progress) {
 	const stateToDraw = this.states[this.currentSate];
 
 	if (stateToDraw !== undefined)
-		stateToDraw.draw(this, this.engine.canvas);
+		stateToDraw.draw(this, this.engine.layers.debug.ctx);
 	if (this.rigidBody !== null)
-		this.rigidBody.drawDebug(this.debug.rigidBody, this.engine.canvas);
+		this.rigidBody.drawDebug(this.debug.rigidBody, this.engine.layers.debug.ctx);
 	for (let hB in this.hitBoxes)
-		this.hitBoxes[hB].drawDebug(true, this.engine.canvas);
+		this.hitBoxes[hB].drawDebug(this.debug.hitBox, this.engine.layers.debug.ctx);
 }
 
 gameObject.prototype.getFramePlacement = function(elapsedTime) {
