@@ -49,24 +49,26 @@ $(document).ready(() => {
 			rest.setSize(100, 100);
 			rest.addRigidBody();
 			rest.toggleGravity();
-			rest.engine.controlers[0].setHandler(function(_this) {
-				_this.engine.objects['blockL0'].setSpeed(
-					Math.abs(_this.engine.controlers[0].moveStick.xAxis) > _this.engine.controlers[0].moveStick.deadZone ? _this.engine.controlers[0].moveStick.xAxis * 20 : 0,
-					_this.engine.objects['blockL0'].rigidBody.velocity.y
-				);
-				if (_this.engine.objects['blockL0'].rigidBody.collide.bot === true)
-					_this.states.jumped = false;
-				if (_this.a.pressed === true && _this.states.jumped === false)
-				{
-					_this.states.jumped = true;
-					_this.engine.objects['blockL0'].setSpeed(_this.engine.objects['blockL0'].rigidBody.velocity.x, -15);
-				}
-				if (_this.engine.objects['blockL0'].position.y > 878)
-					score = 0;
-				else
-					score += Math.abs(878 - _this.engine.objects['blockL0'].position.y) / 100;
-				if (score > hScore)
-					hScore = score;
+			window.addEventListener('gamepadReady', function(e) {
+				awakening.controlers[e.detail.position].setHandler(function(_this) {
+					_this.engine.objects['blockL0'].setSpeed(
+						Math.abs(_this.engine.controlers[0].moveStick.xAxis) > _this.engine.controlers[0].moveStick.deadZone ? _this.engine.controlers[0].moveStick.xAxis * 20 : 0,
+						_this.engine.objects['blockL0'].rigidBody.velocity.y
+					);
+					if (_this.engine.objects['blockL0'].rigidBody.collide.bot === true)
+						_this.states.jumped = false;
+					if (_this.a.pressed === true && _this.states.jumped === false)
+					{
+						_this.states.jumped = true;
+						_this.engine.objects['blockL0'].setSpeed(_this.engine.objects['blockL0'].rigidBody.velocity.x, -15);
+					}
+					if (_this.engine.objects['blockL0'].position.y > 878)
+						score = 0;
+					else
+						score += Math.abs(878 - _this.engine.objects['blockL0'].position.y) / 100;
+					if (score > hScore)
+						hScore = score;
+				});
 			});
 		}
 	// }, 250);

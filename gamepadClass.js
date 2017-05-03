@@ -11,7 +11,11 @@
 /* ************************************************************************** */
 
 let Gamepad = function(gamepadOrder, engine, handler) {
+	let _this = this;
+
 	if (engine === undefined)
+		return (null);
+	if (handler === undefined)
 		return (null);
 	this.engine = engine;
 	this.position = gamepadOrder || 0;
@@ -20,13 +24,13 @@ let Gamepad = function(gamepadOrder, engine, handler) {
 		xAxis : this.pad.axes[0],
 		yAxis : this.pad.axes[1],
 		click : this.pad.buttons[10],
-		deadZone : 0.1
+		deadZone : 0.5
 	};
 	this.cStick = {
 		xAxis : this.pad.axes[2],
 		yAxis : this.pad.axes[3],
 		click : this.pad.buttons[11],
-		deadZone : 0.1
+		deadZone : 0.5
 	};
 	this.a = this.pad.buttons[1];
 	this.b = this.pad.buttons[0];
@@ -48,6 +52,7 @@ let Gamepad = function(gamepadOrder, engine, handler) {
 	};
 	this.handle = handler || null;
 	this.states = {};
+	this.readyEvent = new CustomEvent('gamepadReady', {'detail' : _this});
 }
 
 Gamepad.prototype.update = function() {
@@ -89,6 +94,7 @@ Gamepad.prototype.update = function() {
 Gamepad.prototype.setHandler = function(handler) {
 	let _this = this;
 
+	console.log('should be done');
 	this.handle = function() {
 		handler(_this);
 	}.bind(_this);

@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 let Awakening = function(config) {
+	let _this = this;
+
 	this.height				= config.height;
 	this.width				= config.width;
 	this.lastRender			= 0;
@@ -28,7 +30,30 @@ let Awakening = function(config) {
 		'debug' : new Canvas('debug', {width : config.width, height : config.height})
 	};
 	this.playerNb = 1;
-	this.controlers = [new Gamepad(0, this)];
+	this.controlers = [];
+	window.addEventListener('gamepadconnected', function(e) {
+		if (_this.controlers.length >= 4)
+			console.log('too many controlers');
+		else
+		{
+			_this.playerNb++;
+			_this.controlers[e.gamepad.index] = new Gamepad(e.gamepad.index, this, function() {});
+			if (e.gamepad.id.match('Unknown') !== null)
+			{
+				console.log('Gamepad aborted for ' + e.gamepad.index + ' ' + e.gamepad.id);
+				return (null);
+			}
+			else
+			{
+				console.log('Gamepad event dispached for ' + e.gamepad.index + ' ' + e.gamepad.id);
+				window.dispatchEvent(_this.controlers[e.gamepad.index].readyEvent);
+			}
+		}
+	}.bind(_this));
+	window.addEventListener('gamepaddisconnected', function(e) {
+		_this.controlers[e.gamepad.index] = undefined;
+		_this.playerNb--;
+	}.bind(_this));
 }
 
 Awakening.prototype.calculateLogic = function(progress) {
@@ -37,7 +62,8 @@ Awakening.prototype.calculateLogic = function(progress) {
 		this.objects[object].updateRigidBody();
 		this.objects[object].updateHitBoxes();
 	}
-	for (let object in this.objects) {
+	for (let object in this.objects)
+	{
 		let stamp = object;
 
 		for (let b in this.objects)
