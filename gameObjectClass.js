@@ -6,11 +6,11 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:45:46 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/01 16:28:09 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/04 19:07:32 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-let gameObject = function (config) {
+let GameObject = function (config) {
 	this.position		= {
 		x : 0,
 		y : 0
@@ -34,7 +34,7 @@ let gameObject = function (config) {
 	this.hitBoxes		= {};
 }
 
-gameObject.prototype.setSize = function(width, height) {
+GameObject.prototype.setSize = function(width, height) {
 	this.size.x = width;
 	this.size.y = height;
 	if (this.rigidBody !== null && this.rigidBody !== undefined)
@@ -44,26 +44,26 @@ gameObject.prototype.setSize = function(width, height) {
 	}
 }
 
-gameObject.prototype.toggleGravity = function() {
+GameObject.prototype.toggleGravity = function() {
 	if (this.rigidBody)
 		this.rigidBody.gravity = this.rigidBody.gravity ? false : true;
 }
 
-gameObject.prototype.setSpeed = function(x, y) {
+GameObject.prototype.setSpeed = function(x, y) {
 	if (this.rigidBody)
 		this.rigidBody.setVelocity(x, y);
 }
 
-gameObject.prototype.addSpeed = function(x, y) {
+GameObject.prototype.addSpeed = function(x, y) {
 	this.rigidBody.addSpeed(x, y);
 }
 
-gameObject.prototype.resolveRigidBody = function(rB) {
+GameObject.prototype.resolveRigidBody = function(rB) {
 	if (this.rigidBody && rB)
 		this.rigidBody.checkCollision(rB);
 }
 
-gameObject.prototype.resolveHitBoxes = function(hB) {
+GameObject.prototype.resolveHitBoxes = function(hB) {
 	for (let hitbox in this.hitBoxes)
 	{
 		if (this.hitBoxes[hitbox].delete === false)
@@ -73,7 +73,7 @@ gameObject.prototype.resolveHitBoxes = function(hB) {
 	}
 }
 
-gameObject.prototype.loadImage = function(url) {
+GameObject.prototype.loadImage = function(url) {
 	let		downloadingImage	= new Image();
 	const	position			= this.image.files.length;
 
@@ -88,7 +88,7 @@ gameObject.prototype.loadImage = function(url) {
 	downloadingImage.src = url;
 }
 
-gameObject.prototype.loadImageArray = function(urlArray) {
+GameObject.prototype.loadImageArray = function(urlArray) {
 	for (image in urlArray) {
 		this.loadImage(urlArray[image]);
 		this.image.isAnime = true;
@@ -96,12 +96,12 @@ gameObject.prototype.loadImageArray = function(urlArray) {
 	}
 }
 
-gameObject.prototype.setMass = function(newMass) {
+GameObject.prototype.setMass = function(newMass) {
 	if (this.rigidBody)
 		this.rigidBody.setMass(newMass);
 }
 
-gameObject.prototype.draw = function(awakening, progress) {
+GameObject.prototype.draw = function(awakening, progress) {
 	const stateToDraw = this.states[this.currentSate];
 
 	if (stateToDraw !== undefined)
@@ -112,7 +112,7 @@ gameObject.prototype.draw = function(awakening, progress) {
 		this.hitBoxes[hB].drawDebug(this.debug.hitBox, this.engine.layers.debug.ctx);
 }
 
-gameObject.prototype.getFramePlacement = function(elapsedTime) {
+GameObject.prototype.getFramePlacement = function(elapsedTime) {
 	const	percentElapsed	= ((elapsedTime / this.image.speedRatio) * 100);
 	const	aproxFramePos	= (this.image.frames * percentElapsed) / 100;
 	let 	roundedFramePos;
@@ -125,17 +125,17 @@ gameObject.prototype.getFramePlacement = function(elapsedTime) {
 		return (roundedFramePos);
 }
 
-gameObject.prototype.updateRigidBody = function() {
+GameObject.prototype.updateRigidBody = function() {
 	if (this.rigidBody)
 		this.rigidBody.update();
 }
 
-gameObject.prototype.updateHitBoxes = function() {
+GameObject.prototype.updateHitBoxes = function() {
 	for (let hB in this.hitBoxes)
 		this.hitBoxes[hB].update();
 }
 
-gameObject.prototype.move = function(x, y) {
+GameObject.prototype.move = function(x, y) {
 	this.position.x = x;
 	this.position.y = y;
 	if (this.rigidBody !== null) {
@@ -143,16 +143,16 @@ gameObject.prototype.move = function(x, y) {
 	}
 }
 
-gameObject.prototype.addAnimationState = function(stateName, urlArray) {
+GameObject.prototype.addAnimationState = function(stateName, urlArray) {
 	this.states[stateName] = new AnimationState();
 	this.states[stateName].loadImageUrl(urlArray);
 }
 
-gameObject.prototype.addRigidBody = function(config) {
+GameObject.prototype.addRigidBody = function(config) {
 	this.rigidBody = new RigidBody(this, config);
 }
 
-gameObject.prototype.addHitBox = function(config) {
+GameObject.prototype.addHitBox = function(config) {
 	if (!config)
 		config = {};
 	let holder = new HitBox(this, config);
@@ -160,7 +160,7 @@ gameObject.prototype.addHitBox = function(config) {
 	this.hitBoxes[holder.name] = holder;
 }
 
-gameObject.prototype.removeHitBox = function(name) {
+GameObject.prototype.removeHitBox = function(name) {
 	if (this.hitBoxes[name])
 		this.hitBoxes[name].delete = true;
 }

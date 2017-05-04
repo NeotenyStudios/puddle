@@ -6,16 +6,14 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/01 15:34:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/01 17:49:58 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/04 16:42:52 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-let Gamepad = function(gamepadOrder, engine, handler) {
+let Gamepad = function(gamepadOrder, engine) {
 	let _this = this;
 
 	if (engine === undefined)
-		return (null);
-	if (handler === undefined)
 		return (null);
 	this.engine = engine;
 	this.position = gamepadOrder || 0;
@@ -50,9 +48,12 @@ let Gamepad = function(gamepadOrder, engine, handler) {
 		topRight	: this.pad.buttons[5],
 		botRight	: this.pad.buttons[7]
 	};
-	this.handle = handler || null;
+	this.handle = function(){};
 	this.states = {};
 	this.readyEvent = new CustomEvent('gamepadReady', {'detail' : _this});
+	this.used = false;
+	this.user = null;
+	this.disconnecting = false;
 }
 
 Gamepad.prototype.update = function() {
@@ -94,7 +95,6 @@ Gamepad.prototype.update = function() {
 Gamepad.prototype.setHandler = function(handler) {
 	let _this = this;
 
-	console.log('should be done');
 	this.handle = function() {
 		handler(_this);
 	}.bind(_this);

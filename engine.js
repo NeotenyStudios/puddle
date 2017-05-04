@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/03 15:30:32 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/01 20:16:03 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/04 18:56:53 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,24 @@ $(document).ready(() => {
 			rest = awakening.objects['blockL' + blockL];
 			blockL++;
 			rest.move(gMM(40, 1000), 150);
-			rest.setSize(100, 100);
+			rest.setSize(150, 300);
+			rest.addAnimationState('default', ['/0.png', '/1.png', '/2.png', '/3.png', '/4.png', '/5.png', '/6.png', '/7.png']);
 			rest.addRigidBody();
 			rest.toggleGravity();
 			window.addEventListener('gamepadReady', function(e) {
-				awakening.controlers[e.detail.position].setHandler(function(_this) {
+				awakening.gamepads[e.detail.position].setHandler(function(_this) {
+					_this.used = true;
+					_this.user = 'lmao';
 					_this.engine.objects['blockL0'].setSpeed(
-						Math.abs(_this.engine.controlers[0].moveStick.xAxis) > _this.engine.controlers[0].moveStick.deadZone ? _this.engine.controlers[0].moveStick.xAxis * 20 : 0,
+						Math.abs(_this.moveStick.xAxis) > _this.moveStick.deadZone ? _this.moveStick.xAxis * 20 : 0,
 						_this.engine.objects['blockL0'].rigidBody.velocity.y
 					);
+					if (Math.abs(_this.cStick.xAxis) > _this.cStick.deadZone)
+						_this.engine.camera.x += _this.cStick.xAxis;
+					if (Math.abs(_this.cStick.yAxis) > _this.cStick.deadZone)
+						_this.engine.camera.y += _this.cStick.yAxis;
+					 _this.engine.camera.z += _this.triggers.topLeft.value / 100;
+					 _this.engine.camera.z -= _this.triggers.topRight.value / 100;
 					if (_this.engine.objects['blockL0'].rigidBody.collide.bot === true)
 						_this.states.jumped = false;
 					if (_this.a.pressed === true && _this.states.jumped === false)
@@ -85,7 +94,6 @@ $(document).ready(() => {
 			rest.rigidBody.setMass(100);
 			rest.setSpeed(gMM(-2, -1), 2);
 			rest.rigidBody.setBounce(1);
-			//rest.toggleGravity();
 		}
 	}, 250);
 
@@ -97,6 +105,7 @@ $(document).ready(() => {
 	hb.addRigidBody()
 	hb.setMass(0);
 	hb.addHitBox();
+	awakening.searchForGamePads();
 
 	window.requestAnimationFrame((timestamp) => {awakening.loop(timestamp)});
 });
