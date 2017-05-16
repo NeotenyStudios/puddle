@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:23:30 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/01 18:48:35 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/16 07:44:24 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@ let RigidBody = function(parentGameObject, config) {
 		console.error('noParentGameObject bounded to the RigidBody module');
 		return (null);
 	}
+	if (config === undefined)
+		config = {};
 	this.parentGameObject = parentGameObject;
-	this.x = parentGameObject.position.x;
-	this.y = parentGameObject.position.y;
-	this.width = parentGameObject.size.x;
-	this.height = parentGameObject.size.y;
+	this.x = config.posX || parentGameObject.position.x;
+	this.y = config.PosY || parentGameObject.position.y;
+	this.width = config.width || parentGameObject.size.x;
+	this.height = config.height || parentGameObject.size.y;
 	this.min = new Vector();
 	this.max = new Vector();
 	this.mass = 50;
@@ -34,6 +36,11 @@ let RigidBody = function(parentGameObject, config) {
 		top		: false,
 		bot		: false
 	};
+	this.airFriction = 0;
+}
+
+RigidBody.prototype.resolveAirFirction = function() {
+	
 }
 
 RigidBody.prototype.update = function() {

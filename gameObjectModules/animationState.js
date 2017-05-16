@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 18:05:05 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/04 19:02:40 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/16 09:07:12 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@ let AnimationState = function (config) {
 	}.bind(_this), this.duration);
 }
 
-AnimationState.prototype.loadImage = function(url) {
+AnimationState.prototype.loadImage = function(url, offset) {
 	let		downloadingImage	= new Image();
 	const	position			= this.files.length;
 
+	if (offset === undefined)
+		offset = {x : 0, y : 0};
 	this.files[position] = new Image();
 	this.isLoading += 1;
 	this.frames = this.files.length
@@ -37,13 +39,14 @@ AnimationState.prototype.loadImage = function(url) {
 		_this.files[position].src = url;
 		_this.files[position].isReady = true;
 		_this.isLoading -= 1;
+		_this.offset = offset;
 	}(this);
 	downloadingImage.src = url;
 }
 
-AnimationState.prototype.loadImageUrl = function(urlArray) {
+AnimationState.prototype.loadImageUrl = function(urlArray, offsetArray) {
 	for (image in urlArray) {
-		this.loadImage(urlArray[image]);
+		this.loadImage(urlArray[image], offsetArray[image]);
 		this.frames = urlArray.length;
 	}
 }
@@ -62,7 +65,12 @@ AnimationState.prototype.draw = function(objectContext, canvas) {
 	const	image		= this.files[localFrame];
 
 	if (image !== undefined)
-		canvas.drawImage(image, objectContext.position.x, objectContext.position.y);
+	{
+		if (objectContext.rigidBody !== undefined && objectContext.rigidBody !== null)
+			canvas.drawImage(image, objectContext.rigidBody.x + image.offset.x, objectContext.rigidBody.y + image.offset.y);
+		else
+			canvas.drawImage(image, objectContext.position.x + image.offset.x, objectContext.position.y + image.offset.y);
+	}
 }
 
 AnimationState.prototype.getFramePlacement = function() {

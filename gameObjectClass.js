@@ -6,16 +6,18 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:45:46 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/04 19:07:32 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/16 08:35:15 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 let GameObject = function (config) {
+	if (config === undefined)
+		config = {};
 	this.position		= {
-		x : 0,
-		y : 0
+		x : config.posX || 0,
+		y : config.posY || 0
 	}
-	this.rotation		= 0;
+	this.rotation		= 0; //not used for now
 	this.currentSate	= 'default';
 	this.states			= {};
 	this.size			= {
@@ -23,9 +25,8 @@ let GameObject = function (config) {
 		'y'	: 0
 	}
 	this.layer			= 0;
-	this.name			= config.name;
 	this.debug			= {
-		'hitBox' : false,
+		'hitBox' : true,
 		'rigidBody' : true,
 	}
 	this.engine			= config.engine || null;

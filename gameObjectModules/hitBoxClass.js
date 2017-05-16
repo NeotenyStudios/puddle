@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/17 17:12:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/26 16:13:03 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/16 08:03:58 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,19 @@ let	HitBox = function (parentGameObject, config) {
 	this.parentGameObject = parentGameObject;
 	this.name = 'HB_' + parentGameObject.name + '_' + (config.name || 'undefined');
 	this.position = new Vector({
-		x : this.parentGameObject.position.x,
-		y : this.parentGameObject.position.y
+		x : config.posX || this.parentGameObject.position.x,
+		y : config.posY || this.parentGameObject.position.y
 	});
-	this.width = this.parentGameObject.size.x;
-	this.height = this.parentGameObject.size.y;
+	this.width = config.width || this.parentGameObject.size.x;
+	this.height = config.height || this.parentGameObject.size.y;
 	this.debugColor = '#00dd0b';
+	this.offset = {
+		x : config.offX || 0,
+		y : config.offY || 0
+	}
 	this.max = new Vector({
-		x : this.position.x + this.width,
-		y : this.position.y + this.height,
+		x : this.position.x + this.width + this.offset.x,
+		y : this.position.y + this.height + this.offset.y
 	});
 	this.min = new Vector({
 		x : this.position.x,
@@ -38,21 +42,26 @@ let	HitBox = function (parentGameObject, config) {
 	this.colliding = false;
 }
 
+HitBox.prototype.setOffset = function(x, y) {
+	this.offset.x = x;
+	this.offset.y = y;
+}
+
 HitBox.prototype.drawDebug = function(permission, canvas) {
 	if (permission === true) {
 		canvas.strokeStyle = this.debugColor;
 		canvas.lineWidth = 1;
 		canvas.beginPath();
-		canvas.rect(this.position.x, this.position.y, this.width, this.height);
+		canvas.rect(this.position.x + this.offset.x, this.position.y + this.offset.y, this.width, this.height);
 		canvas.stroke();
 	}
 }
 
 HitBox.prototype.updateAxisAlignedBoundingBox = function() {
-	this.max.x = this.position.x + this.width;
-	this.max.y = this.position.y + this.height;
-	this.min.x = this.position.x;
-	this.min.y = this.position.y;
+	this.max.x = this.position.x + this.width + this.offset.x;
+	this.max.y = this.position.y + this.height + + this.offset.y;
+	this.min.x = this.position.x + this.offset.x;
+	this.min.y = this.position.y + this.offset.y;
 }
 
 HitBox.prototype.update = function() {

@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/01 15:34:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/04 16:42:52 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/16 09:00:49 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,10 @@ Gamepad.prototype.update = function() {
 		this.handle();
 }
 
-Gamepad.prototype.setHandler = function(handler) {
+Gamepad.prototype.setHandler = function(handler, boundObject) {
 	let _this = this;
 
 	this.handle = function() {
-		handler(_this);
-	}.bind(_this);
+		handler(_this, boundObject);
+	}.bind(_this, boundObject);
 }

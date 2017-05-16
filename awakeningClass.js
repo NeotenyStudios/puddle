@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:09:03 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/04 19:07:38 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/16 08:58:43 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,31 @@ let Awakening = function(config) {
 	this.objNb				= 0;
 	this.hits				= 0;
 	this.layers				= {
-		'default' : new Canvas('default', {width : config.width, height : config.height}),
-		'debug' : new Canvas('debug', {width : config.width, height : config.height})
+		'default'		: new Canvas('default', {width : config.width, height : config.height}),
+		'debug'			: new Canvas('debug', {width : config.width, height : config.height}),
+		'debug_text'	: new Canvas('debug_text', {width : config.width, height : config.height})
 	};
 	this.playerNb = 1;
 	this.gamepads = [];
 	this.camera = {
-		x : 1,
-		y : 1,
+		x : 0,
+		y : 0,
 		z : 1
 	}
 	window.addEventListener('gamepadconnected', function(e) {
 		this.searchForGamePads();
 	}.bind(_this));
-	window.addEventListener('gamepaddisconnected', function(e) {
+	window.addEventListener('gamepaddisconnected',function(e) {
 		_this.gamepads[e.gamepad.index].disconnecting = true;
+	}.bind(_this));
+	setInterval(function() {
+		_this.lastRenderedFrames = _this.renderedFrames;
+		_this.renderedFrames = 0;
+		_this.elapsedTime = 0;
+		_this.layers.debug.ctx.fillText(_this.renderedFrames, 10 , 10);
+	}.bind(_this), 1000);
+	window.requestAnimationFrame(function(timestamp) {
+		_this.loop(timestamp)
 	}.bind(_this));
 }
 
@@ -119,33 +129,35 @@ Awakening.prototype.drawCameraTranslation = function(layer) {
 Awakening.prototype.draw = function(progress) {
 	this.forwardAnimationStates(progress);
 	for (let layer in this.layers)
-		this.drawCameraTranslation(this.layers[layer]);
+		if (layer !== 'debug_text')
+			this.drawCameraTranslation(this.layers[layer]);
 	for (let object in this.objects)
 		this.objects[object].draw(this, progress);
 	if (this.displayFrameRate === true)
 	{
-		this.layers.debug.ctx.font = '20px Arial';
-		this.layers.debug.ctx.fillText(this.lastRenderedFrames, 25 , 25);
+		this.layers.debug_text.ctx.font = '20px Arial';
+		this.layers.debug_text.ctx.fillText(this.lastRenderedFrames, 25 , 25);
 	}
 	if (this.displayObjCount === true)
 	{
-		this.layers.debug.ctx.font = '20px Arial';
-		this.layers.debug.ctx.fillText(this.objNb.toString(), 75 , 25);
+		this.layers.debug_text.ctx.font = '20px Arial';
+		this.layers.debug_text.ctx.fillText(this.objNb.toString(), 75 , 25);
 	}
 	if (this.displayObjCount === true)
 	{
-		this.layers.debug.ctx.font = '20px Arial';
-		this.layers.debug.ctx.fillText(this.hits.toString(), 150 , 25);
+		this.layers.debug_text.ctx.font = '20px Arial';
+		this.layers.debug_text.ctx.fillText(this.hits.toString(), 150 , 25);
 	}
-	this.layers.debug.ctx.font = '20px Arial';
-	this.layers.debug.ctx.fillText(Math.round(score).toString() + ' + ' + Math.abs(878 - this.objects['blockL0'].position.y) / 100, 50 , 150);
-	this.layers.debug.ctx.fillText(Math.round(hScore).toString(), 50 , 250);
 };
 
 Awakening.prototype.moveCamera = function(x, y, z) {
 	this.camera.x = x;
 	this.camera.y = y;
 	this.camera.z = z;
+}
+
+Awakening.prototype.setZoom = function(zoom) {
+	this.camera.z = zoom;
 }
 
 Awakening.prototype.loop = function(timestamp) {
@@ -164,14 +176,17 @@ Awakening.prototype.loop = function(timestamp) {
 
 Awakening.prototype.clearCanvas = function() {
 	for (layer in this.layers) {
-		this.layers[layer].ctx.clearRect(-10, -10, this.layers[layer].DOM.width + 20, this.layers[layer].DOM.height + 20);
+		this.layers[layer].ctx.clearRect(-100, -100, this.layers[layer].DOM.width + 200, this.layers[layer].DOM.height + 200);
 	}
 }
 
-Awakening.prototype.buildObject = function(name){
-	this.objects[name] = new GameObject({'name' : name});
-	this.objects[name].engine = this;
+Awakening.prototype.buildObject = function(config){
+	if (config === undefined)
+		config = {'name' : 'undefined'};
+	this.objects[config.name] = new GameObject(config);
+	this.objects[config.name].engine = this;
 	this.objNb++;
+	return (this.objects[config.name]);
 }
 
 Awakening.prototype.forwardAnimationStates = function(progress) {
