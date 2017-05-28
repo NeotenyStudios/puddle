@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:45:46 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/16 08:35:15 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/29 00:59:38 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ let GameObject = function (config) {
 	this.currentSate	= 'default';
 	this.states			= {};
 	this.size			= {
-		'x'	: 0,
-		'y'	: 0
+		'x'	: config.width || 0,
+		'y'	: config.height || 0
 	}
 	this.layer			= 0;
 	this.debug			= {
@@ -144,9 +144,9 @@ GameObject.prototype.move = function(x, y) {
 	}
 }
 
-GameObject.prototype.addAnimationState = function(stateName, urlArray) {
+GameObject.prototype.addAnimationState = function(stateName, urlArray, offsetArray) {
 	this.states[stateName] = new AnimationState();
-	this.states[stateName].loadImageUrl(urlArray);
+	this.states[stateName].loadImageUrl(urlArray, offsetArray);
 }
 
 GameObject.prototype.addRigidBody = function(config) {
@@ -159,6 +159,7 @@ GameObject.prototype.addHitBox = function(config) {
 	let holder = new HitBox(this, config);
 
 	this.hitBoxes[holder.name] = holder;
+	return (this.hitBoxes[holder.name]);
 }
 
 GameObject.prototype.removeHitBox = function(name) {

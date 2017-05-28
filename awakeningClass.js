@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:09:03 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/16 08:58:43 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/28 23:29:03 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ let Awakening = function(config) {
 	};
 	this.playerNb = 1;
 	this.gamepads = [];
+	this.localPlayers = [];
 	this.camera = {
 		x : 0,
 		y : 0,
@@ -70,10 +71,9 @@ Awakening.prototype.getAvailableGamePad = function() {
 	{
 		for (let index = 0; index < this.gamepads.length; index++)
 		{
-			if (this.gamepads[index].used = false)
+			if (this.gamepads[index].used === false)
 				return (this.gamepads[index]);
 		}
-		return (null);
 	}
 	return (null);
 }
@@ -124,6 +124,7 @@ Awakening.prototype.notifyNoControler = function() {
 
 Awakening.prototype.drawCameraTranslation = function(layer) {
 	layer.ctx.setTransform(this.camera.z, 0, 0, this.camera.z, -((this.camera.z - 1) * this.width / 2) + this.camera.x, -((this.camera.z - 1) * this.height / 2) + this.camera.y);
+	layer.ctx.save();
 }
 
 Awakening.prototype.draw = function(progress) {

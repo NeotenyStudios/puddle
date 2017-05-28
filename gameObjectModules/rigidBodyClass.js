@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:23:30 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/16 07:44:24 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/29 00:17:37 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ let RigidBody = function(parentGameObject, config) {
 	this.height = config.height || parentGameObject.size.y;
 	this.min = new Vector();
 	this.max = new Vector();
-	this.mass = 50;
+	this.mass = 500;
 	this.invmass = 1 / this.mass;
 	this.restitution = 0.1;
 	this.velocity = new Vector();
 	this.debugColor = '#000';
-	this.gravity = false;
+	this.gravity = config.gravity || false;
 	this.collide = {
 		right	: false,
 		left	: false,

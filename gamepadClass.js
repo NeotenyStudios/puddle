@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gamepadClass.js                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
+/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/01 15:34:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/16 09:00:49 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/26 00:13:50 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ let Gamepad = function(gamepadOrder, engine) {
 		xAxis : this.pad.axes[0],
 		yAxis : this.pad.axes[1],
 		click : this.pad.buttons[10],
-		deadZone : 0.5
+		deadZone : 0.2
 	};
 	this.cStick = {
 		xAxis : this.pad.axes[2],
 		yAxis : this.pad.axes[3],
 		click : this.pad.buttons[11],
-		deadZone : 0.5
+		deadZone : 0.2
 	};
 	this.a = this.pad.buttons[1];
 	this.b = this.pad.buttons[0];
@@ -62,13 +62,13 @@ Gamepad.prototype.update = function() {
 		xAxis : this.pad.axes[0],
 		yAxis : this.pad.axes[1],
 		click : this.pad.buttons[10],
-		deadZone : 0.1
+		deadZone : 0.2
 	};
 	this.cStick = {
 		xAxis : this.pad.axes[2],
 		yAxis : this.pad.axes[3],
 		click : this.pad.buttons[11],
-		deadZone : 0.1
+		deadZone : 0.2
 	};
 	this.a = this.pad.buttons[1];
 	this.b = this.pad.buttons[0];
