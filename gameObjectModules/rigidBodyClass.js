@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rigidBodyClass.js                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
+/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:23:30 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/29 00:17:37 by mgras            ###   ########.fr       */
+/*   Updated: 2017/06/16 19:29:05 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ let RigidBody = function(parentGameObject, config) {
 	}
 	if (config === undefined)
 		config = {};
+	console.log(parentGameObject.size);
 	this.parentGameObject = parentGameObject;
 	this.x = config.posX || parentGameObject.position.x;
 	this.y = config.PosY || parentGameObject.position.y;
@@ -241,7 +242,6 @@ RigidBody.prototype.resetCollide = function() {
 RigidBody.prototype.checkCollision = function(b) {
 	let manifold;
 
-	this.resetCollide();
 	if (this.gravity === true)
 		this.applyGravity();
 	if (this.isColliding(b))

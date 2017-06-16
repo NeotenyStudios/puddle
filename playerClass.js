@@ -54,10 +54,24 @@ PlayableCharacter.prototype.addHitbox = function(targetObject, config) {
 
 PlayableCharacter.prototype.bindGamepad = function(gamepad) {
 	this.boundGamePad = gamepad;
-	gamepad.used = true;
+	if (gamepad !== undefined && gamepad !== null)
+		gamepad.used = true;
 	return (gamepad);
 }
 
 PlayableCharacter.prototype.swapAnimationState = function(state, targetObject, cb) {
-	this.boundObjects[targetObject].currentSate = state;
+	if (this.boundObjects[targetObject] !== undefined)
+		this.boundObjects[targetObject].currentSate = state;
+}
+
+PlayableCharacter.prototype.appendAnimationToObjectQueue = function(context, stateName, callback) {
+	if (this.boundObjects[context] === undefined)
+		return (null);
+	else
+		return (this.boundObjects[context].addAnimationToQueue(stateName, callback));
+}
+
+PlayableCharacter.prototype.clearAnimationQueue = function(context) {
+	if (this.boundObjects[context] !== undefined)
+		this.boundObjects[context].animationQueue = [];
 }

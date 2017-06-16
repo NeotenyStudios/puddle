@@ -15,9 +15,10 @@ let AnimationState = function (config) {
 
 	config				= config | {};
 	this.files			= [];
-	this.duration		= config.duration | 1000;
-	this.name			= config.name | 'default';
-	this.onFrame		= 0;
+	this.duration		= config.duration || 1000;
+	this.name			= config.name || 'default';
+	this.onFrameId		= 0;
+	this.lastFrameId	= 0;
 	this.isLoading		= 0;
 	this.frames			= -1;
 	this.elapsedTime	= 0;
@@ -64,6 +65,9 @@ AnimationState.prototype.resetClock = function(){
 	this.clock = setInterval(function() {
 		_this.elapsedTime = 0;
 	}.bind(_this), this.duration);
+	this.onFrameId = 0;
+	this.lastFrameId = -1;
+	this.elapsedTime = 0;
 }
 
 AnimationState.prototype.flipY = function() {
@@ -103,8 +107,9 @@ AnimationState.prototype.manageContextTranslations = function(canvas, posX, posY
 }
 
 AnimationState.prototype.draw = function(objectContext, canvas) {
-	const	localFrame	= this.getFramePlacement()
-	const	image		= this.files[localFrame];
+	this.lastFrameId	= this.onFrameId;
+	this.onFrameId		= this.getFramePlacement();
+	const	image		= this.files[this.onFrameId];
 	let		posX;
 	let		posY;
 	let		finalPos;

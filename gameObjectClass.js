@@ -6,33 +6,42 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:45:46 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/29 00:59:38 by mgras            ###   ########.fr       */
+/*   Updated: 2017/05/16 08:35:15 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 let GameObject = function (config) {
+	let _this = this;
+
 	if (config === undefined)
 		config = {};
-	this.position		= {
+	this.position				= {
 		x : config.posX || 0,
 		y : config.posY || 0
 	}
-	this.rotation		= 0; //not used for now
-	this.currentSate	= 'default';
-	this.states			= {};
-	this.size			= {
+	this.rotation				= 0; //not used for now
+	this.currentSate			= 'default';
+	this.states					= {};
+	this.size					= {
 		'x'	: config.width || 0,
-		'y'	: config.height || 0
+		'y'	: config.width || 0
 	}
-	this.layer			= 0;
-	this.debug			= {
+	this.layer					= 0;
+	this.debug					= {
 		'hitBox' : true,
 		'rigidBody' : true,
 	}
-	this.engine			= config.engine || null;
-	this.rigidBody		= null;
-	this.name			= config.name || 'object';
-	this.hitBoxes		= {};
+	this.engine					= config.engine || null;
+	this.rigidBody				= null;
+	this.name					= config.name || 'object';
+	this.hitBoxes				= {};
+	this.isChainingAnimations	= false;
+	this.animationQueue			= [];
+	window.addEventListener(this.name + '_animation', function(handler, data){
+		if (handler === undefined)
+			return (null);
+		handler(data).bind(_this);
+	});
 }
 
 GameObject.prototype.setSize = function(width, height) {
@@ -102,9 +111,40 @@ GameObject.prototype.setMass = function(newMass) {
 		this.rigidBody.setMass(newMass);
 }
 
-GameObject.prototype.draw = function(awakening, progress) {
-	const stateToDraw = this.states[this.currentSate];
+GameObject.prototype.getAnimationQueuePosition = function() {
+	let		splicedAnimationQueue	= this.animationQueue;
+	let		cState;
 
+	if (this.animationQueue.length !== 0)
+	{
+		cState = this.states[this.animationQueue[0].stateName];
+		if (this.animationQueue[0].started === false)
+		{
+			cState.resetClock();
+			this.animationQueue[0].started = true;
+		}
+		if (cState.onFrameId > cState.getFramePlacement())
+		{
+			this.animationQueue[0].callback();
+			splicedAnimationQueue.splice(0, 1);
+			this.animationQueue = splicedAnimationQueue;
+			return (this.getAnimationQueuePosition());
+		}
+		else
+			return (cState);
+	}
+	else
+	{
+		this.isChainingAnimations = false;
+		this.animationQueue = [];
+		return (this.states[this.currentSate]);
+	}
+}
+
+GameObject.prototype.draw = function(awakening, progress) {
+	let stateToDraw;
+
+	stateToDraw = this.getAnimationQueuePosition();
 	if (stateToDraw !== undefined)
 		stateToDraw.draw(this, this.engine.layers.debug.ctx);
 	if (this.rigidBody !== null)
@@ -144,9 +184,11 @@ GameObject.prototype.move = function(x, y) {
 	}
 }
 
-GameObject.prototype.addAnimationState = function(stateName, urlArray, offsetArray) {
-	this.states[stateName] = new AnimationState();
-	this.states[stateName].loadImageUrl(urlArray, offsetArray);
+GameObject.prototype.addAnimationState = function(stateName, urlArray, offset) {
+	this.states[stateName] = new AnimationState({'name' : this.name + ' ' + stateName});
+	if (offset === undefined)
+		offset = [];
+	this.states[stateName].loadImageUrl(urlArray, offset);
 }
 
 GameObject.prototype.addRigidBody = function(config) {
@@ -159,10 +201,24 @@ GameObject.prototype.addHitBox = function(config) {
 	let holder = new HitBox(this, config);
 
 	this.hitBoxes[holder.name] = holder;
-	return (this.hitBoxes[holder.name]);
 }
 
 GameObject.prototype.removeHitBox = function(name) {
 	if (this.hitBoxes[name])
 		this.hitBoxes[name].delete = true;
+}
+
+GameObject.prototype.addAnimationToQueue = function(stateName, cb)
+{
+	let animationParcel = {};
+
+	if (this.states[stateName] === undefined)
+		return (null);
+	this.states[stateName].resetClock();
+	animationParcel.stateName = stateName;
+	animationParcel.callback = cb;
+	animationParcel.started = false;
+	this.animationQueue.push(animationParcel);
+	this.isChainingAnimations = true;
+	return (animationParcel);
 }

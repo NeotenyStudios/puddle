@@ -16,7 +16,7 @@ let	HitBox = function (parentGameObject, config) {
 		console.warn('No parentGameObject in the hitbox module');
 		return (null)
 	}
-	this.handler = function(b) {this.parentGameObject.engine.hits++};
+	this.handler = function(b) {};
 	this.parentGameObject = parentGameObject;
 	this.name = 'HB_' + parentGameObject.name + '_' + (config.name || 'undefined');
 	this.position = new Vector({

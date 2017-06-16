@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   awakeningClass.js                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
+/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:09:03 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/28 23:29:03 by mgras            ###   ########.fr       */
+/*   Updated: 2017/06/16 19:31:34 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ let Awakening = function(config) {
 	this.displayObjCount	= true;
 	this.displayHitCount	= true;
 	this.objNb				= 0;
-	this.hits				= 0;
 	this.layers				= {
 		'default'		: new Canvas('default', {width : config.width, height : config.height}),
 		'debug'			: new Canvas('debug', {width : config.width, height : config.height}),
@@ -78,6 +77,10 @@ Awakening.prototype.getAvailableGamePad = function() {
 	return (null);
 }
 
+Awakening.prototype.addCustomGamepadToLoop = function(gamepad) {
+	this.gamepads.push(gamepad);
+}
+
 Awakening.prototype.searchForGamePads = function() {
 	const gamepads = navigator.getGamepads();
 
@@ -97,6 +100,10 @@ Awakening.prototype.searchForGamePads = function() {
 }
 
 Awakening.prototype.calculateLogic = function(progress) {
+	for (let object in this.objects) {
+		if (this.objects[object].rigidBody !== null)
+			this.objects[object].rigidBody.resetCollide();
+	}
 	for (let object in this.objects)
 	{
 		this.objects[object].updateRigidBody();
@@ -143,11 +150,6 @@ Awakening.prototype.draw = function(progress) {
 	{
 		this.layers.debug_text.ctx.font = '20px Arial';
 		this.layers.debug_text.ctx.fillText(this.objNb.toString(), 75 , 25);
-	}
-	if (this.displayObjCount === true)
-	{
-		this.layers.debug_text.ctx.font = '20px Arial';
-		this.layers.debug_text.ctx.fillText(this.hits.toString(), 150 , 25);
 	}
 };
 
