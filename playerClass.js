@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   playerClass.js                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
+/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/04 16:01:42 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/29 00:06:28 by mgras            ###   ########.fr       */
+/*   Updated: 2017/06/18 21:36:24 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ PlayableCharacter.prototype.addHitbox = function(targetObject, config) {
 	let holder;
 
 	if (targetObject === undefined)
-		return (null)
+		return (null);
 	if (config === undefined)
 		config.name = 'undefined';
-	boundHitboxes[config.name] = new HitBox(this, config);
-	return (boundHitboxes[config.name]);
+	this.boundHitboxes[config.name] = this.boundObjects[targetObject].addHitBox(config);
+	return (this.boundHitboxes[config.name]);
 }
 
 PlayableCharacter.prototype.bindGamepad = function(gamepad) {
@@ -74,4 +74,9 @@ PlayableCharacter.prototype.appendAnimationToObjectQueue = function(context, sta
 PlayableCharacter.prototype.clearAnimationQueue = function(context) {
 	if (this.boundObjects[context] !== undefined)
 		this.boundObjects[context].animationQueue = [];
+}
+
+PlayableCharacter.prototype.removeHitbox = function(name) {
+	if (this.boundHitboxes[name] !== undefined)
+		this.boundHitboxes[name].delete = true;
 }

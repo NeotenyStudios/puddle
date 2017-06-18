@@ -3,43 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   hitBoxClass.js                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
+/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/17 17:12:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/16 08:03:58 by mgras            ###   ########.fr       */
+/*   Updated: 2017/06/18 21:24:24 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 let	HitBox = function (parentGameObject, config) {
-	if (parentGameObject === undefined || parentGameObject === null)
-	{
+	if (parentGameObject === undefined || parentGameObject === null) {
 		console.warn('No parentGameObject in the hitbox module');
-		return (null)
+		return (null);
 	}
-	this.handler = function(b) {};
-	this.parentGameObject = parentGameObject;
-	this.name = 'HB_' + parentGameObject.name + '_' + (config.name || 'undefined');
-	this.position = new Vector({
+	this.handler			= config.handler || function(self, colliding) {};
+	this.parentGameObject	= parentGameObject;
+	this.name				= 'HB_' + parentGameObject.name + '_' + (config.name || 'undefined');
+	this.position			= new Vector({
 		x : config.posX || this.parentGameObject.position.x,
 		y : config.posY || this.parentGameObject.position.y
 	});
-	this.width = config.width || this.parentGameObject.size.x;
-	this.height = config.height || this.parentGameObject.size.y;
-	this.debugColor = '#00dd0b';
-	this.offset = {
+	this.width				= config.width || this.parentGameObject.size.x;
+	this.height				= config.height || this.parentGameObject.size.y;
+	this.debugColor			= '#00dd0b';
+	this.offset				= {
 		x : config.offX || 0,
 		y : config.offY || 0
 	}
-	this.max = new Vector({
+	this.max				= new Vector({
 		x : this.position.x + this.width + this.offset.x,
 		y : this.position.y + this.height + this.offset.y
 	});
-	this.min = new Vector({
+	this.min				= new Vector({
 		x : this.position.x,
 		y : this.position.y
 	});
-	this.delete = false;
-	this.colliding = false;
+	this.delete				= false;
+	this.colliding			= false;
+	this.logicMarkers		= config.logicMarkers || {};
+	this.ingoreList			= config.ingoreList || [];
 }
 
 HitBox.prototype.setOffset = function(x, y) {
@@ -95,11 +96,13 @@ HitBox.prototype.isColliding = function(b) {
 
 HitBox.prototype.checkHit = function(b) {
 	if (!b || !this)
-		return (null);
+		return (false);
+	if (b.delete === true || this.delete === true)
+		return (false);
 	if (this.isColliding(b) === true)
 	{
 		if (this.handler)
-			this.handler(b.parentGameObject);
+			this.handler(this.parentGameObject, b.parentGameObject);
 		this.debugColor = '#f44242';
 		b.debugColor = '#f44242';
 		this.colliding = true;
@@ -112,10 +115,16 @@ HitBox.prototype.checkHit = function(b) {
 }
 
 HitBox.prototype.removeSelf = function() {
+	let tmp = this.parentGameObject.hitBoxes;
+
 	if (this.delete === true)
 	{
-		this.parentGameObject.hitBoxes[this.name] = undefined;
-		return (null);
+		delete tmp[this.name];
+		return (tmp);
 	}
-	this.delete = true;
+	else
+	{
+		this.delete = true;
+		return (hitboxArray);
+	}
 }

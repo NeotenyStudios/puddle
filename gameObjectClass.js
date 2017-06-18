@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gameObjectClass.js                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
+/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:45:46 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/16 08:35:15 by mgras            ###   ########.fr       */
+/*   Updated: 2017/06/18 21:20:50 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ let GameObject = function (config) {
 	}
 	this.layer					= 0;
 	this.debug					= {
-		'hitBox' : true,
-		'rigidBody' : true,
+		'hitBox'	: true,
+		'rigidBody'	: false,
 	}
 	this.engine					= config.engine || null;
 	this.rigidBody				= null;
@@ -74,13 +74,16 @@ GameObject.prototype.resolveRigidBody = function(rB) {
 }
 
 GameObject.prototype.resolveHitBoxes = function(hB) {
+	let finalHitboxContainer = this.hitBoxes;
+
 	for (let hitbox in this.hitBoxes)
 	{
 		if (this.hitBoxes[hitbox].delete === false)
 			this.hitBoxes[hitbox].checkHit(hB);
 		else
-			this.hitBoxes[hitbox].removeSelf();
+			finalHitboxContainer = this.hitBoxes[hitbox].removeSelf();
 	}
+	this.hitBoxes = finalHitboxContainer;
 }
 
 GameObject.prototype.loadImage = function(url) {
@@ -147,10 +150,13 @@ GameObject.prototype.draw = function(awakening, progress) {
 	stateToDraw = this.getAnimationQueuePosition();
 	if (stateToDraw !== undefined)
 		stateToDraw.draw(this, this.engine.layers.debug.ctx);
-	if (this.rigidBody !== null)
+	if (this.rigidBody !== null && this.debug.rigidBody === true)
 		this.rigidBody.drawDebug(this.debug.rigidBody, this.engine.layers.debug.ctx);
-	for (let hB in this.hitBoxes)
-		this.hitBoxes[hB].drawDebug(this.debug.hitBox, this.engine.layers.debug.ctx);
+	if (this.debug.hitBox === true)
+	{
+		for (let hB in this.hitBoxes)
+			this.hitBoxes[hB].drawDebug(this.debug.hitBox, this.engine.layers.debug.ctx);
+	}
 }
 
 GameObject.prototype.getFramePlacement = function(elapsedTime) {
@@ -193,6 +199,7 @@ GameObject.prototype.addAnimationState = function(stateName, urlArray, offset) {
 
 GameObject.prototype.addRigidBody = function(config) {
 	this.rigidBody = new RigidBody(this, config);
+	return (this.rigidBody);
 }
 
 GameObject.prototype.addHitBox = function(config) {
@@ -201,6 +208,7 @@ GameObject.prototype.addHitBox = function(config) {
 	let holder = new HitBox(this, config);
 
 	this.hitBoxes[holder.name] = holder;
+	return (holder);
 }
 
 GameObject.prototype.removeHitBox = function(name) {

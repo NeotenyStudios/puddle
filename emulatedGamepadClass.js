@@ -6,7 +6,7 @@
 /*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 18:39:35 by anonymous         #+#    #+#             */
-/*   Updated: 2017/06/16 19:20:43 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/06/18 19:48:18 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ let EmulatedGamepad = function(engine) {
 
 		if (key === 38)
 			_this.moveStick.yAxis = 1;
-		else if (key === 40)
+		if (key === 40)
 			_this.moveStick.yAxis = -1;
 		if (key === 37)
 			_this.moveStick.xAxis = -1;
-		else if (key === 39)
+		if (key === 39)
 			_this.moveStick.xAxis = 1;
 		if (key === 32)
 			_this.x = pressedInerGamepadStructure;
@@ -84,11 +84,11 @@ let EmulatedGamepad = function(engine) {
 
 		if (key === 38)
 			_this.moveStick.yAxis = 0;
-		else if (key === 40)
+		if (key === 40)
 			_this.moveStick.yAxis = 0;
 		if (key === 37)
 			_this.moveStick.xAxis = 0;
-		else if (key === 39)
+		if (key === 39)
 			_this.moveStick.xAxis = 0;
 		if (key === 32)
 			_this.x = defaultInerGamepedStructure;

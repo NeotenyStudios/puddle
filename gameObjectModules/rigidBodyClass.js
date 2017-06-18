@@ -6,7 +6,7 @@
 /*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:23:30 by mgras             #+#    #+#             */
-/*   Updated: 2017/06/16 19:29:05 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/06/18 19:45:39 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ let RigidBody = function(parentGameObject, config) {
 	}
 	if (config === undefined)
 		config = {};
-	console.log(parentGameObject.size);
 	this.parentGameObject = parentGameObject;
 	this.x = config.posX || parentGameObject.position.x;
 	this.y = config.PosY || parentGameObject.position.y;
@@ -41,7 +40,7 @@ let RigidBody = function(parentGameObject, config) {
 }
 
 RigidBody.prototype.resolveAirFirction = function() {
-	
+	//Roight m8
 }
 
 RigidBody.prototype.update = function() {
