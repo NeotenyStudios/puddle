@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gameObjectClass.js                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:45:46 by mgras             #+#    #+#             */
-/*   Updated: 2017/06/18 21:20:50 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/07/04 22:05:07 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ let GameObject = function (config) {
 	this.layer					= 0;
 	this.debug					= {
 		'hitBox'	: true,
-		'rigidBody'	: false,
+		'rigidBody'	: true,
 	}
 	this.engine					= config.engine || null;
 	this.rigidBody				= null;
