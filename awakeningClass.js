@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   awakeningClass.js                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:09:03 by mgras             #+#    #+#             */
-/*   Updated: 2017/06/18 21:23:42 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/07/04 18:40:09 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,16 @@ let Awakening = function(config) {
 		'debug'			: new Canvas('debug', {width : config.width, height : config.height}),
 		'debug_text'	: new Canvas('debug_text', {width : config.width, height : config.height})
 	};
-	this.playerNb = 1;
-	this.gamepads = [];
-	this.localPlayers = [];
-	this.camera = {
+	this.playerNb			= 1;
+	this.gamepads			= [];
+	this.localPlayers		= [];
+	this.logicStart			= config.logicStart		|| function(engine) {};
+	this.logicEnd			= config.logicEnd		|| function(engine) {};
+	this.drawStart			= config.drawStart		|| function(engine) {};
+	this.drawEnd			= config.drawEnd		|| function(engine) {};
+	this.onLoopStart		= config.onLoopStart	|| function(engine) {};
+	this.onLoopEnd			= config.onLoopEnd		|| function(engine) {};
+	this.camera				= {
 		x : 0,
 		y : 0,
 		z : 1
@@ -100,6 +106,7 @@ Awakening.prototype.searchForGamePads = function() {
 }
 
 Awakening.prototype.calculateLogic = function(progress) {
+	this.logicStart(this);
 	for (let object in this.objects) {
 		if (this.objects[object].rigidBody !== null)
 			this.objects[object].rigidBody.resetCollide();
@@ -123,6 +130,7 @@ Awakening.prototype.calculateLogic = function(progress) {
 			}
 		}
 	}
+	this.logicEnd(this);
 };
 
 Awakening.prototype.notifyNoControler = function() {
@@ -135,6 +143,7 @@ Awakening.prototype.drawCameraTranslation = function(layer) {
 }
 
 Awakening.prototype.draw = function(progress) {
+	this.drawStart();
 	this.forwardAnimationStates(progress);
 	for (let layer in this.layers)
 		if (layer !== 'debug_text')
@@ -151,6 +160,7 @@ Awakening.prototype.draw = function(progress) {
 		this.layers.debug_text.ctx.font = '20px Arial';
 		this.layers.debug_text.ctx.fillText(this.objNb.toString(), 75 , 25);
 	}
+	this.drawEnd();
 };
 
 Awakening.prototype.moveCamera = function(x, y, z) {
@@ -167,6 +177,7 @@ Awakening.prototype.loop = function(timestamp) {
 	const progress = timestamp - this.lastRender;
 
 	this.elapsedTime += progress;
+	this.onLoopStart(this);
 	this.clearCanvas();
 	for (let controler in this.gamepads)
 		this.gamepads[controler].update();
@@ -174,6 +185,7 @@ Awakening.prototype.loop = function(timestamp) {
 	this.draw(progress);
 	this.lastRender = timestamp;
 	this.renderedFrames++;
+	this.onLoopEnd(this);
 	window.requestAnimationFrame((timestamp) => {this.loop(timestamp)});
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   playerClass.js                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/04 16:01:42 by mgras             #+#    #+#             */
-/*   Updated: 2017/06/18 21:36:24 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/07/04 19:42:42 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ PlayableCharacter.prototype.bindGamepad = function(gamepad) {
 	return (gamepad);
 }
 
-PlayableCharacter.prototype.swapAnimationState = function(state, targetObject, cb) {
+PlayableCharacter.prototype.swapAnimationState = function(state, targetObject) {
 	if (this.boundObjects[targetObject] !== undefined)
 		this.boundObjects[targetObject].currentSate = state;
 }

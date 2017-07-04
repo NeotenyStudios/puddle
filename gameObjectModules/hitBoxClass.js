@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hitBoxClass.js                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/17 17:12:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/06/18 21:24:24 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/07/04 18:25:04 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,15 @@ let	HitBox = function (parentGameObject, config) {
 		y : this.position.y + this.height + this.offset.y
 	});
 	this.min				= new Vector({
-		x : this.position.x,
-		y : this.position.y
+		x : this.position.x + this.offset.x,
+		y : this.position.y + this.offset.y
 	});
 	this.delete				= false;
 	this.colliding			= false;
 	this.logicMarkers		= config.logicMarkers || {};
 	this.ingoreList			= config.ingoreList || [];
+	this.position.x			+= this.offset.x;
+	this.position.y			+= this.offset.y;
 }
 
 HitBox.prototype.setOffset = function(x, y) {

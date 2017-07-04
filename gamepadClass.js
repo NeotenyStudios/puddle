@@ -6,7 +6,7 @@
 /*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/01 15:34:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/06/16 18:39:04 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/06/21 14:49:54 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ let Gamepad = function(gamepadOrder, engine) {
 		xAxis : this.pad.axes[0],
 		yAxis : this.pad.axes[1],
 		click : this.pad.buttons[10],
-		deadZone : 0.2
+		deadZone : 0.4
 	};
 	this.cStick = {
 		xAxis : this.pad.axes[2],
 		yAxis : this.pad.axes[3],
 		click : this.pad.buttons[11],
-		deadZone : 0.2
+		deadZone : 0.4
 	};
 	this.a = this.pad.buttons[1];
 	this.b = this.pad.buttons[0];

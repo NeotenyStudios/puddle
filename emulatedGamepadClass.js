@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   emulatedGamepadClass.js                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 18:39:35 by anonymous         #+#    #+#             */
-/*   Updated: 2017/06/18 19:48:18 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/07/04 20:02:06 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,29 +69,38 @@ let EmulatedGamepad = function(engine) {
 
 		if (key === 38)
 			_this.moveStick.yAxis = 1;
-		if (key === 40)
+		else if (key === 40)
 			_this.moveStick.yAxis = -1;
 		if (key === 37)
 			_this.moveStick.xAxis = -1;
-		if (key === 39)
+		else if (key === 39)
 			_this.moveStick.xAxis = 1;
 		if (key === 32)
 			_this.x = pressedInerGamepadStructure;
+		if (key === 65)
+			_this.cStick.xAxis = -1;
+		else if (key === 68)
+			_this.cStick.xAxis = 1;
+		if (key === 87)
+			_this.cStick.yAxis = -1;
+		else if (key === 83)
+			_this.cStick.yAxis = 1;
+
 	}).bind(_this);
 
 	$(window).keyup((e) => {
 		const key = e.keyCode;
 
-		if (key === 38)
+		if (key === 38 || key === 40)
 			_this.moveStick.yAxis = 0;
-		if (key === 40)
-			_this.moveStick.yAxis = 0;
-		if (key === 37)
-			_this.moveStick.xAxis = 0;
-		if (key === 39)
+		if (key === 37 || key === 39)
 			_this.moveStick.xAxis = 0;
 		if (key === 32)
 			_this.x = defaultInerGamepedStructure;
+		if (key === 65 || key === 68)
+			_this.cStick.xAxis = 0;
+		if (key === 87 || key === 83)
+			_this.cStick.yAxis = 0;
 	}).bind(_this);
 }
 
