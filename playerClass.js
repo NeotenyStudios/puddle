@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/04 16:01:42 by mgras             #+#    #+#             */
-/*   Updated: 2017/07/04 19:42:42 by mgras            ###   ########.fr       */
+/*   Updated: 2017/07/06 15:23:14 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ PlayableCharacter.prototype.addHitbox = function(targetObject, config) {
 }
 
 PlayableCharacter.prototype.bindGamepad = function(gamepad) {
-	this.boundGamePad = gamepad;
+	this.boundGamepad = gamepad;
 	if (gamepad !== undefined && gamepad !== null)
 		gamepad.used = true;
 	return (gamepad);
@@ -78,5 +78,8 @@ PlayableCharacter.prototype.clearAnimationQueue = function(context) {
 
 PlayableCharacter.prototype.removeHitbox = function(name) {
 	if (this.boundHitboxes[name] !== undefined)
+	{
 		this.boundHitboxes[name].delete = true;
+		delete this.boundHitboxes[name];
+	}
 }

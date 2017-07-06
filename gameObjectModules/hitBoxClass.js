@@ -6,7 +6,7 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/17 17:12:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/07/04 18:25:04 by mgras            ###   ########.fr       */
+/*   Updated: 2017/07/06 16:42:44 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@ let	HitBox = function (parentGameObject, config) {
 		console.warn('No parentGameObject in the hitbox module');
 		return (null);
 	}
-	this.handler			= config.handler || function(self, colliding) {};
+	this.handler			= config.handler || function(objectA, objectB, collider, collided) {};
 	this.parentGameObject	= parentGameObject;
 	this.name				= 'HB_' + parentGameObject.name + '_' + (config.name || 'undefined');
 	this.position			= new Vector({
@@ -104,7 +104,7 @@ HitBox.prototype.checkHit = function(b) {
 	if (this.isColliding(b) === true)
 	{
 		if (this.handler)
-			this.handler(this.parentGameObject, b.parentGameObject);
+			this.handler(this.parentGameObject, b.parentGameObject, this, b);
 		this.debugColor = '#f44242';
 		b.debugColor = '#f44242';
 		this.colliding = true;
