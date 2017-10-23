@@ -6,9 +6,11 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:18:39 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/25 16:16:35 by mgras            ###   ########.fr       */
+/*   Updated: 2017/08/31 11:04:45 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let Vector = function(config) {
 	if (config === undefined)

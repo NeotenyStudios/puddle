@@ -6,9 +6,11 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/20 15:41:57 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/26 18:40:06 by mgras            ###   ########.fr       */
+/*   Updated: 2017/08/31 11:04:22 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let Canvas = function(name, config) {
 	this.DOM = this.initCanvas(config.width, config.height);

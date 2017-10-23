@@ -6,23 +6,25 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:09:03 by mgras             #+#    #+#             */
-/*   Updated: 2017/07/04 18:40:09 by mgras            ###   ########.fr       */
+/*   Updated: 2017/08/31 11:29:19 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let Awakening = function(config) {
 	let _this = this;
 
-	this.height				= config.height;
-	this.width				= config.width;
+	this.height				= config.height || 0;
+	this.width				= config.width || 0;
 	this.lastRender			= 0;
 	this.objects			= {};
 	this.renderedFrames		= 0;
 	this.lastRenderedFrames	= this.renderedFrames;
 	this.elapsedTime		= 0;
-	this.displayFrameRate	= true;
-	this.displayObjCount	= true;
-	this.displayHitCount	= true;
+	this.displayFrameRate	= config.dsplFR || true;
+	this.displayObjCount	= config.dsplOC || true;
+	this.displayHitCount	= config.dsplHC || true;
 	this.objNb				= 0;
 	this.layers				= {
 		'default'		: new Canvas('default', {width : config.width, height : config.height}),
@@ -107,25 +109,25 @@ Awakening.prototype.searchForGamePads = function() {
 
 Awakening.prototype.calculateLogic = function(progress) {
 	this.logicStart(this);
-	for (let object in this.objects) {
+	for (var object in this.objects) {
 		if (this.objects[object].rigidBody !== null)
 			this.objects[object].rigidBody.resetCollide();
 	}
-	for (let object in this.objects)
+	for (var object in this.objects)
 	{
 		this.objects[object].updateRigidBody();
 		this.objects[object].updateHitBoxes();
 	}
-	for (let object in this.objects)
+	for (var object in this.objects)
 	{
-		let stamp = object;
+		var stamp = object;
 
-		for (let b in this.objects)
+		for (var b in this.objects)
 		{
 			if (b !== stamp)
 			{
 				this.objects[object].resolveRigidBody(this.objects[b].rigidBody);
-				for (let hB in this.objects[b].hitBoxes)
+				for (var hB in this.objects[b].hitBoxes)
 					this.objects[object].resolveHitBoxes(this.objects[b].hitBoxes[hB]);
 			}
 		}
@@ -190,7 +192,7 @@ Awakening.prototype.loop = function(timestamp) {
 };
 
 Awakening.prototype.clearCanvas = function() {
-	for (layer in this.layers) {
+	for (let layer in this.layers) {
 		this.layers[layer].ctx.clearRect(-100, -100, this.layers[layer].DOM.width + 200, this.layers[layer].DOM.height + 200);
 	}
 }

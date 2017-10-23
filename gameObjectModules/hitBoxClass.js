@@ -6,9 +6,11 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/17 17:12:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/07/06 16:42:44 by mgras            ###   ########.fr       */
+/*   Updated: 2017/10/12 17:28:05 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let	HitBox = function (parentGameObject, config) {
 	if (parentGameObject === undefined || parentGameObject === null) {
@@ -94,6 +96,13 @@ HitBox.prototype.isColliding = function(b) {
 	if (a.max.y < b.min.y || a.min.y > b.max.y)
 		return (false);
 	return (true);
+}
+
+HitBox.prototype.setHandler = function(handler) {
+	if (typeof handler !== 'function')
+		console.warn(this.name + ' is getting a handler that is not a function')
+	else
+		this.handler = handler;
 }
 
 HitBox.prototype.checkHit = function(b) {

@@ -6,9 +6,11 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/04 16:01:42 by mgras             #+#    #+#             */
-/*   Updated: 2017/07/06 15:23:14 by mgras            ###   ########.fr       */
+/*   Updated: 2017/08/31 11:03:25 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let PlayableCharacter = function(engine) {
 	if (engine === undefined)

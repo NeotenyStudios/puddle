@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   gamepadClass.js                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/01 15:34:14 by mgras             #+#    #+#             */
-/*   Updated: 2017/06/21 14:49:54 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/08/31 11:03:59 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let Gamepad = function(gamepadOrder, engine) {
 	let _this = this;

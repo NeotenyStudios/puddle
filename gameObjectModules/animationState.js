@@ -6,9 +6,11 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 18:05:05 by mgras             #+#    #+#             */
-/*   Updated: 2017/05/28 23:45:39 by mgras            ###   ########.fr       */
+/*   Updated: 2017/08/31 11:58:25 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let AnimationState = function (config) {
 	let _this = this;
@@ -52,7 +54,7 @@ AnimationState.prototype.loadImage = function(url, offset) {
 AnimationState.prototype.loadImageUrl = function(urlArray, offsetArray) {
 	if (offsetArray === undefined)
 		offsetArray = [];
-	for (image in urlArray) {
+	for (let image in urlArray) {
 		this.loadImage(urlArray[image], offsetArray[image]);
 		this.frames = urlArray.length;
 	}

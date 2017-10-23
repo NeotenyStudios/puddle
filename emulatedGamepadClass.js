@@ -6,9 +6,11 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/16 18:39:35 by anonymous         #+#    #+#             */
-/*   Updated: 2017/07/04 20:02:06 by mgras            ###   ########.fr       */
+/*   Updated: 2017/08/31 11:04:12 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let defaultInerGamepedStructure = {
 	pressed : false,

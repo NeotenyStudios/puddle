@@ -6,9 +6,11 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 13:45:46 by mgras             #+#    #+#             */
-/*   Updated: 2017/07/04 22:05:07 by mgras            ###   ########.fr       */
+/*   Updated: 2017/10/12 18:01:10 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let GameObject = function (config) {
 	let _this = this;
@@ -19,7 +21,7 @@ let GameObject = function (config) {
 		x : config.posX || 0,
 		y : config.posY || 0
 	}
-	this.rotation				= 0; //not used for now
+	this.rotation				= 0; //not used for now, surely i'll code inertia and rotations one day
 	this.currentSate			= 'default';
 	this.states					= {};
 	this.size					= {
@@ -37,11 +39,22 @@ let GameObject = function (config) {
 	this.hitBoxes				= {};
 	this.isChainingAnimations	= false;
 	this.animationQueue			= [];
+	this.tags					= config.tags || {};
 	window.addEventListener(this.name + '_animation', function(handler, data){
 		if (handler === undefined)
 			return (null);
 		handler(data).bind(_this);
 	});
+}
+
+GameObject.prototype.setPosition = function(x, y) {
+	this.position.x = x;
+	this.position.y = y;
+	if (this.rigidBody)
+	{
+		this.rigidBody.x = x;
+		this.rigidBody.y = y;
+	}
 }
 
 GameObject.prototype.setSize = function(width, height) {
@@ -76,7 +89,7 @@ GameObject.prototype.resolveRigidBody = function(rB) {
 GameObject.prototype.resolveHitBoxes = function(hB) {
 	let finalHitboxContainer = this.hitBoxes;
 
-	for (let hitbox in this.hitBoxes)
+	for (var hitbox in this.hitBoxes)
 	{
 		if (this.hitBoxes[hitbox].delete === false)
 			this.hitBoxes[hitbox].checkHit(hB);
@@ -84,6 +97,12 @@ GameObject.prototype.resolveHitBoxes = function(hB) {
 			finalHitboxContainer = this.hitBoxes[hitbox].removeSelf();
 	}
 	this.hitBoxes = finalHitboxContainer;
+}
+
+GameObject.prototype.addHandlerToHitBox = function(name, handler) {
+	const formatedName = 'HB_' + this.name + '_' + name;
+
+	this.hitBoxes[formatedName].setHandler(handler);
 }
 
 GameObject.prototype.loadImage = function(url) {

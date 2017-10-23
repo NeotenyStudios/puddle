@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   rigidBodyClass.js                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
+/*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:23:30 by mgras             #+#    #+#             */
-/*   Updated: 2017/06/18 19:45:39 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/08/31 11:25:35 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let RigidBody = function(parentGameObject, config) {
 	if (parentGameObject === undefined) {
@@ -196,16 +198,16 @@ RigidBody.prototype.setVelocity = function(x, y) {
 }
 
 RigidBody.prototype.resolveCollision = function(b, manifold) {
-	let a = this;
-	let relativeVelocity = new Vector({x : b.velocity.x - a.velocity.x, y : b.velocity.y - a.velocity.y});
-	let velAlongNormal = relativeVelocity.dotProduct(manifold.normal);
-	let e;
-	let j;
-	let cX;
-	let cY;
-	let impulse;
-	let percent = 0.8;
-	let slope = 0.1;
+	var a = this;
+	var relativeVelocity = new Vector({x : b.velocity.x - a.velocity.x, y : b.velocity.y - a.velocity.y});
+	var velAlongNormal = relativeVelocity.dotProduct(manifold.normal);
+	var e;
+	var j;
+	var cX;
+	var cY;
+	var impulse;
+	var percent = 0.8;
+	var slope = 0.1;
 
 	if (velAlongNormal > 0)
 		return (null);

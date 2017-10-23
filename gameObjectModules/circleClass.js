@@ -6,9 +6,11 @@
 /*   By: mgras <mgras@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/18 13:36:28 by mgras             #+#    #+#             */
-/*   Updated: 2017/04/18 13:45:19 by mgras            ###   ########.fr       */
+/*   Updated: 2017/08/31 11:04:32 by mgras            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+'use strict';
 
 let Circle = function(config) {
 	this.radius = config.radius || 0;
