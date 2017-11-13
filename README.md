@@ -39,24 +39,24 @@ Notice you can pass a config object to awakening here's all the stuff you can in
 *Note that this part may change alot while I work on it, for instance, I want to ditch the width and height properties to replace them with a screen ratio.*
 
 
-##1. Engine instance
+## 1. Engine instance
 Here's all you can do with your engine instance
 
-###1.a .verifGamePad(gamepad)
+### 1.a .verifGamePad(gamepad)
 This function takes a *gamepadObject*
 It will return null if it's not valid, on the flipside it will just pass the *gamepadObject* back if it's valid.
 
-###1.b .getAvailableGamePad( )
+### 1.b .getAvailableGamePad( )
 Returns an available gamepad
 
-###1.c .addCustomGamepadToLoop( )
+### 1.c .addCustomGamepadToLoop( )
 This function is mainly here for testing. But you can also use it for other things.
 It will add an *EmulatedGamepadObject* to the logic loop
 
-###1.d .searchForGamePads( )
+### 1.d .searchForGamePads( )
 Will try to assign as many available gamepads to the Engine's gamepad array. Once it finished initializing a gamepad it'll trigger the custom readyEvent for this gamepad
 
-###1.e .calculateLogic(progress)
+### 1.e .calculateLogic(progress)
 This is the function responsible for all the logic instructions.
 First it will reset all the **hitbox collide markers** to *false*.
 Secondly we'll loop in all liveObjects and update all hitboxes and rigidbody positions.
@@ -65,33 +65,33 @@ You should never be in the need to call this function anyways, the engine loops 
 But you never know, maybe you want to calculate the next logic tick because you can.
 Note that the engines logicStart and logicEnd are executed at the begining and the end of this function.
 
-###1.f .drawCameraTranslation(layer)
+### 1.f .drawCameraTranslation(layer)
 Takes a layer as input and will adjust it's position and zoom factor according to the camera values of the Engine Instance. All layer share the same camera.
 
-###1.g .draw(progress)
+### 1.g .draw(progress)
 This function handles all the drawing. 
 It's responsible or all the animation progess and pacing.
 First it will adjust all layers to the camera translation factor of it's instance.
 Then will proceed to loop in all objects too draw them if needed.
 Last but not least, it will display fps, objCount and registeredHitCount values if asked.
 
-###1.h .moveCamera(x, y, z)
+### 1.h .moveCamera(x, y, z)
 Moves the camera.
 X is left right.
 Y is top down.
 Z is zoom.
 
-###1.i .setZoom(z)
+### 1.i .setZoom(z)
 Sets the camera Zoom to the supplied value
 
-###1.j .loop(timestamp)
+### 1.j .loop(timestamp)
 This is the main loop, it's mainly here to call .draw(), and .calculateLogic(), it'll also set some usefull pacing values like the elapsedTime and lastRender values. like .draw() and .calculateLogic(), you should never need to call this.
 
-###1.k .clearCanvas()
+### 1.k .clearCanvas()
 Clears *all* layers from this engine instance.
 
-###1.l .forwardAnimationStates()
+### 1.l .forwardAnimationStates()
 This should in theory never be called, it's here to forward all animations to their next frame based on the elapsed time since last render.
 
-###1.m .buildObject()
+### 1.m .buildObject()
 Shortcut to build a new Object and assign it to the engine instance. See gameObject for configurations details
